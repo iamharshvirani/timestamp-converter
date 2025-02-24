@@ -1,70 +1,127 @@
-# Getting Started with Create React App
+# Timestamp Converter
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern web application for converting between Unix timestamps and human-readable dates, with support for multiple time formats and precision levels.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- Epoch to Human-Readable Date Converter
+- Human-Readable Date to Epoch Converter
+- Multiple Time Format Support (UTC, Local, ISO 8601)
+- Timestamp Generator for Current & Future Dates
+- Support for Multiple Precision Levels (seconds, milliseconds, microseconds, nanoseconds)
 
-### `npm start`
+## Local Development
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+1. Clone the repository:
+```bash
+git clone <your-repo-url>
+cd timestamp-converter
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+2. Install dependencies:
+```bash
+npm install
+```
 
-### `npm test`
+3. Start the development server:
+```bash
+npm start
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+4. Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-### `npm run build`
+## Deployment Options
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 1. Deploy with Docker
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. Build the Docker image:
+```bash
+docker build -t timestamp-converter .
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. Run the container:
+```bash
+docker run -p 80:80 timestamp-converter
+```
 
-### `npm run eject`
+The application will be available at `http://localhost`.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### 2. Deploy to GitHub Pages (Free Hosting)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. Add the `homepage` field to your `package.json`:
+```json
+{
+  "homepage": "https://<your-github-username>.github.io/timestamp-converter"
+}
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+2. Install the `gh-pages` package:
+```bash
+npm install --save-dev gh-pages
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+3. Add deployment scripts to `package.json`:
+```json
+{
+  "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  }
+}
+```
 
-## Learn More
+4. Deploy the application:
+```bash
+npm run deploy
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### 3. Deploy to Netlify (Free Hosting)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. Create a Netlify account at [netlify.com](https://www.netlify.com)
+2. Install Netlify CLI:
+```bash
+npm install -g netlify-cli
+```
 
-### Code Splitting
+3. Build the application:
+```bash
+npm run build
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+4. Deploy to Netlify:
+```bash
+netlify deploy
+```
 
-### Analyzing the Bundle Size
+### 4. Deploy to Vercel (Free Hosting)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+1. Install Vercel CLI:
+```bash
+npm install -g vercel
+```
 
-### Making a Progressive Web App
+2. Deploy to Vercel:
+```bash
+vercel
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Production Build
 
-### Advanced Configuration
+To create a production build:
+```bash
+npm run build
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+This creates an optimized build in the `build` folder.
 
-### Deployment
+## Technologies Used
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- React
+- Material-UI
+- Luxon (for date/time handling)
+- Docker (optional)
+- Nginx (for Docker deployment)
 
-### `npm run build` fails to minify
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+MIT
