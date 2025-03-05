@@ -1,124 +1,114 @@
-import React from 'react';
-import { Container, Grid, Typography, Box, CssBaseline, createTheme, ThemeProvider, Paper } from '@mui/material';
+import React, { useState, useMemo } from 'react';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
 import EpochConverter from './components/EpochConverter';
 import HumanConverter from './components/HumanConverter';
 import TimestampGenerator from './components/TimestampGenerator';
 
-const theme = createTheme({
-  palette: {
-    mode: 'light',
-    primary: {
-      main: '#2c3e50',
-    },
-    secondary: {
-      main: '#34495e',
-    },
-    background: {
-      default: '#ecf0f1',
-      paper: '#ffffff',
-    },
-  },
-  typography: {
-    h3: {
-      fontWeight: 600,
-      color: '#2c3e50',
-      letterSpacing: '-0.5px',
-    },
-    h6: {
-      fontWeight: 500,
-      color: '#2c3e50',
-    },
-  },
-  components: {
-    MuiCard: {
-      styleOverrides: {
-        root: {
-          borderRadius: 12,
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-          transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
-          '&:hover': {
-            transform: 'translateY(-4px)',
-            boxShadow: '0 6px 12px rgba(0, 0, 0, 0.15)',
-          },
-        },
-      },
-    },
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          borderRadius: 8,
-          textTransform: 'none',
-          fontWeight: 500,
-          padding: '10px 24px',
-        },
-        contained: {
-          boxShadow: 'none',
-          '&:hover': {
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-          },
-        },
-      },
-    },
-    MuiTextField: {
-      styleOverrides: {
-        root: {
-          '& .MuiOutlinedInput-root': {
-            borderRadius: 8,
-          },
-        },
-      },
-    },
-  },
-});
-
 function App() {
+  const [mode, setMode] = useState('light');
+
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode,
+          primary: {
+            main: mode === 'light' ? '#2c3e50' : '#3498db',
+          },
+          secondary: {
+            main: mode === 'light' ? '#34495e' : '#2ecc71',
+          },
+          background: {
+            default: mode === 'light' ? '#ecf0f1' : '#1a1a1a',
+            paper: mode === 'light' ? '#ffffff' : '#2d2d2d',
+          },
+        },
+        components: {
+          MuiPaper: {
+            styleOverrides: {
+              root: {
+                backdropFilter: 'blur(10px)',
+                backgroundColor: mode === 'light' 
+                  ? 'rgba(255, 255, 255, 0.8)'
+                  : 'rgba(45, 45, 45, 0.8)',
+                transition: 'all 0.3s ease-in-out',
+              },
+            },
+          },
+        },
+      }),
+    [mode],
+  );
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box
         sx={{
           minHeight: '100vh',
-          background: 'linear-gradient(145deg, #ecf0f1 0%, #f5f6fa 100%)',
-          py: 6,
+          background: mode === 'light'
+            ? 'linear-gradient(135deg, #ecf0f1 0%, #bdc3c7 100%)'
+            : 'linear-gradient(135deg, #2c3e50 0%, #1a1a1a 100%)',
+          transition: 'all 0.3s ease-in-out',
+          py: 4,
         }}
       >
-        <Container maxWidth="lg">
-          <Paper
-            elevation={0}
-            sx={{
-              borderRadius: 4,
-              p: 4,
-              mb: 4,
-              background: 'rgba(255, 255, 255, 0.9)',
-              backdropFilter: 'blur(10px)',
-            }}
-          >
-            <Typography 
-              variant="h3" 
-              component="h1" 
-              gutterBottom 
-              align="center"
+        <Container maxWidth="md">
+          <Box sx={{ position: 'fixed', top: 16, right: 16 }}>
+            <IconButton
+              onClick={() => setMode(mode === 'light' ? 'dark' : 'light')}
+              color="inherit"
               sx={{
-                mb: 4,
-                background: 'linear-gradient(45deg, #2c3e50 30%, #34495e 90%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
+                bgcolor: mode === 'light' ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)',
+                '&:hover': {
+                  bgcolor: mode === 'light' ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.2)',
+                },
               }}
             >
-              Timestamp Converter
-            </Typography>
-            <Grid container spacing={4}>
-              <Grid item xs={12} md={6}>
+              {mode === 'light' ? <Brightness4Icon /> : <Brightness7Icon />}
+            </IconButton>
+          </Box>
+          <Typography
+            variant="h3"
+            align="center"
+            sx={{
+              mb: 4,
+              background: mode === 'light'
+                ? 'linear-gradient(45deg, #2c3e50 30%, #34495e 90%)'
+                : 'linear-gradient(45deg, #3498db 30%, #2ecc71 90%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              fontWeight: 'bold',
+            }}
+          >
+            Timestamp Converter
+          </Typography>
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
                 <EpochConverter />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <HumanConverter />
-              </Grid>
-              <Grid item xs={12}>
-                <TimestampGenerator />
-              </Grid>
+              </Paper>
             </Grid>
-          </Paper>
+            <Grid item xs={12}>
+              <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
+                <HumanConverter />
+              </Paper>
+            </Grid>
+            <Grid item xs={12}>
+              <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
+                <TimestampGenerator />
+              </Paper>
+            </Grid>
+          </Grid>
         </Container>
       </Box>
     </ThemeProvider>
