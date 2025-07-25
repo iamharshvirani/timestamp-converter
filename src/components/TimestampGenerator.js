@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DateTime } from 'luxon';
+import { getCurrentTimestamp, dateToEpoch } from '../utils/dateUtils';
 import {
   Card,
   CardContent,
@@ -21,46 +21,13 @@ const TimestampGenerator = () => {
   const [customDate, setCustomDate] = useState('');
   const [customTimestamp, setCustomTimestamp] = useState(null);
 
-  const getCurrentTimestamp = () => {
-    const now = DateTime.now();
-    switch (unit) {
-      case 's':
-        setCurrentTimestamp(Math.floor(now.toMillis() / 1000));
-        break;
-      case 'ms':
-        setCurrentTimestamp(now.toMillis());
-        break;
-      case 'μs':
-        setCurrentTimestamp(now.toMillis() * 1000);
-        break;
-      case 'ns':
-        setCurrentTimestamp(now.toMillis() * 1000000);
-        break;
-      default:
-        setCurrentTimestamp(now.toMillis());
-    }
+  const handleGetCurrentTimestamp = () => {
+    setCurrentTimestamp(getCurrentTimestamp(unit));
   };
 
   const generateCustomTimestamp = () => {
     if (!customDate) return;
-
-    const dt = DateTime.fromISO(customDate);
-    switch (unit) {
-      case 's':
-        setCustomTimestamp(Math.floor(dt.toMillis() / 1000));
-        break;
-      case 'ms':
-        setCustomTimestamp(dt.toMillis());
-        break;
-      case 'μs':
-        setCustomTimestamp(dt.toMillis() * 1000);
-        break;
-      case 'ns':
-        setCustomTimestamp(dt.toMillis() * 1000000);
-        break;
-      default:
-        setCustomTimestamp(dt.toMillis());
-    }
+    setCustomTimestamp(dateToEpoch(customDate, unit));
   };
 
   return (
@@ -99,7 +66,7 @@ const TimestampGenerator = () => {
               </Box>
               <Button 
                 variant="contained" 
-                onClick={getCurrentTimestamp}
+                onClick={handleGetCurrentTimestamp}
                 fullWidth
                 sx={{ height: 48 }}
               >

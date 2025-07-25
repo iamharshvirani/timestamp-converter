@@ -1,8 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+test('renders main converter components', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  
+  // Check for our main components
+  expect(screen.getByText('Epoch to Human Date')).toBeInTheDocument();
+  expect(screen.getByText('Human Date to Epoch')).toBeInTheDocument();
+  expect(screen.getByText('Timestamp Generator')).toBeInTheDocument();
 });
