@@ -19,8 +19,8 @@ const AppContent = () => {
       sx={{
         minHeight: '100vh',
         background: mode === 'light'
-          ? 'linear-gradient(135deg, #ecf0f1 0%, #bdc3c7 100%)'
-          : 'linear-gradient(135deg, #2c3e50 0%, #1a1a1a 100%)',
+          ? 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)'
+          : 'linear-gradient(135deg, #1a1a1a 0%, #2d3748 100%)',
         transition: 'all 0.3s ease-in-out',
         py: 4,
       }}
@@ -34,12 +34,14 @@ const AppContent = () => {
           align="center"
           sx={{
             mb: 4,
-            background: mode === 'light'
-              ? 'linear-gradient(45deg, #2c3e50 30%, #34495e 90%)'
-              : 'linear-gradient(45deg, #3498db 30%, #2ecc71 90%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
+            color: mode === 'light'
+              ? '#2c3e50'
+              : '#ffffff',
             fontWeight: 'bold',
+            textShadow: mode === 'light'
+              ? '2px 2px 4px rgba(0,0,0,0.1)'
+              : '2px 2px 8px rgba(0,0,0,0.3)',
+            letterSpacing: '0.5px',
           }}
         >
           Timestamp Converter

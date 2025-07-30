@@ -44,17 +44,51 @@ export const ThemeContextProvider = ({ children }) => {
     palette: {
       mode: isDarkMode ? 'dark' : 'light',
       primary: {
-        main: '#1976d2',
+        main: isDarkMode ? '#3498db' : '#2c3e50',
       },
       secondary: {
-        main: '#dc004e',
+        main: isDarkMode ? '#2ecc71' : '#34495e',
+      },
+      background: {
+        default: isDarkMode ? '#1a1a1a' : '#f5f7fa',
+        paper: isDarkMode ? '#2d2d2d' : '#ffffff',
+      },
+      text: {
+        primary: isDarkMode ? '#ffffff' : '#2c3e50',
+        secondary: isDarkMode ? '#b0b0b0' : '#7f8c8d',
       },
     },
     components: {
       MuiCard: {
         styleOverrides: {
           root: {
+            borderRadius: 16,
+            boxShadow: isDarkMode 
+              ? '0 8px 32px rgba(0,0,0,0.3)'
+              : '0 8px 32px rgba(0,0,0,0.1)',
+            backdropFilter: 'blur(10px)',
+            transition: 'all 0.3s ease-in-out',
+          },
+        },
+      },
+      MuiPaper: {
+        styleOverrides: {
+          root: {
+            borderRadius: 16,
+            boxShadow: isDarkMode 
+              ? '0 8px 32px rgba(0,0,0,0.3)'
+              : '0 8px 32px rgba(0,0,0,0.1)',
+            backdropFilter: 'blur(10px)',
+            transition: 'all 0.3s ease-in-out',
+          },
+        },
+      },
+      MuiButton: {
+        styleOverrides: {
+          root: {
             borderRadius: 12,
+            textTransform: 'none',
+            fontWeight: 600,
           },
         },
       },
