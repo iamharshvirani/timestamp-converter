@@ -1,15 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField, Button, Select, MenuItem, InputLabel, FormControl, Card, CardContent, Typography, Divider, Box } from '@mui/material';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { dateToEpoch } from '../utils/dateUtils';
 import { timezones } from '../utils/timezones';
+import { getLastUsedUnit, setLastUsedUnit, getLastUsedTimezone, setLastUsedTimezone } from '../utils/userPreferences';
 
 const HumanConverter = () => {
   const [dateTime, setDateTime] = useState('');
-  const [unit, setUnit] = useState('s');
+  const [unit, setUnit] = useState(getLastUsedUnit() || 's');
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
-  const [timezone, setTimezone] = useState('Asia/Kolkata');
+  const [timezone, setTimezone] = useState(getLastUsedTimezone() || 'Asia/Kolkata');
+
+  useEffect(() => {
+    setLastUsedUnit(unit);
+  }, [unit]);
+
+  useEffect(() => {
+    setLastUsedTimezone(timezone);
+  }, [timezone]);
 
   const handleConvert = () => {
     if (!dateTime) {
