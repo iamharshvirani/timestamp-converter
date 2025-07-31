@@ -1,12 +1,21 @@
 // Utility functions for managing user preferences in localStorage
 
 export const getUserPreference = (key, defaultValue) => {
-  try {
-    const saved = localStorage.getItem(`timestamp-converter-${key}`);
-    return saved ? JSON.parse(saved) : defaultValue;
-  } catch (error) {
-    console.warn(`Error reading preference ${key}:`, error);
+  const saved = localStorage.getItem(`timestamp-converter-${key}`);
+
+  // If nothing stored, return default immediately
+  if (saved === null) {
     return defaultValue;
+  }
+
+  // Attempt to parse JSON-encoded values first
+  try {
+    return JSON.parse(saved);
+  } catch (error) {
+    // For legacy values that were stored as raw strings (not JSON encoded),
+    // simply return the raw value instead of discarding the preference.
+    console.warn(`Preference ${key} is not valid JSON, falling back to raw string value.`, error);
+    return saved;
   }
 };
 

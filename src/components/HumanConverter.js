@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Select, MenuItem, InputLabel, FormControl, Card, CardContent, Typography, Divider, Box } from '@mui/material';
+import { TextField, Button, Select, MenuItem, InputLabel, FormControl, Card, CardContent, Typography, Divider, Box, IconButton, Snackbar } from '@mui/material';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { dateToEpoch } from '../utils/dateUtils';
 import { timezones } from '../utils/timezones';
 import { getLastUsedUnit, setLastUsedUnit, getLastUsedTimezone, setLastUsedTimezone } from '../utils/userPreferences';
@@ -11,6 +12,8 @@ const HumanConverter = () => {
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
   const [timezone, setTimezone] = useState(getLastUsedTimezone() || 'Asia/Kolkata');
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMsg, setSnackbarMsg] = useState('');
 
   useEffect(() => {
     setLastUsedUnit(unit);
@@ -41,6 +44,17 @@ const HumanConverter = () => {
       setResult(null);
     }
   };
+
+  const showCopyToast = (msg) => {
+    setSnackbarMsg(msg);
+    setSnackbarOpen(true);
+  };
+
+  const handleCopy = (text) => {
+    navigator.clipboard.writeText(text).then(() => showCopyToast('Copied!'));
+  };
+
+  const handleSnackbarClose = () => setSnackbarOpen(false);
 
   return (
     <Card sx={{ minWidth: 400 }}>
@@ -100,10 +114,14 @@ const HumanConverter = () => {
         {result && (
           <Box sx={{ marginTop: 2, opacity: 1, visibility: 'visible' }}>
             <Typography variant="subtitle2" gutterBottom>Conversion Result</Typography>
-            <Typography variant="body2"><strong>Epoch Timestamp:</strong> {result}</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <Typography variant="body2"><strong>Epoch Timestamp:</strong> {result}</Typography>
+              <IconButton size="small" onClick={() => handleCopy(result)} aria-label="copy-epoch"><ContentCopyIcon fontSize="small" /></IconButton>
+            </Box>
           </Box>
         )}
       </CardContent>
+      <Snackbar open={snackbarOpen} autoHideDuration={2000} onClose={handleSnackbarClose} message={snackbarMsg} />
     </Card>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Select, MenuItem, InputLabel, FormControl, Card, CardContent, Typography, Divider, Box } from '@mui/material';
+import { TextField, Button, Select, MenuItem, InputLabel, FormControl, Card, CardContent, Typography, Divider, Box, IconButton, Snackbar } from '@mui/material';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { epochToDate } from '../utils/dateUtils';
 import { timezones } from '../utils/timezones';
 import { getLastUsedUnit, setLastUsedUnit, getLastUsedTimezone, setLastUsedTimezone } from '../utils/userPreferences';
@@ -11,6 +12,8 @@ const EpochConverter = () => {
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
   const [timezone, setTimezone] = useState(() => getLastUsedTimezone());
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMsg, setSnackbarMsg] = useState('');
 
   // Save preferences when unit or timezone changes
   useEffect(() => {
@@ -43,6 +46,17 @@ const EpochConverter = () => {
     }
   };
 
+  const showCopyToast = (msg) => {
+    setSnackbarMsg(msg);
+    setSnackbarOpen(true);
+  };
+
+  const handleCopy = (text) => {
+    navigator.clipboard.writeText(text).then(() => showCopyToast('Copied!'));
+  };
+
+  const handleSnackbarClose = () => setSnackbarOpen(false);
+
   return (
     <Card sx={{ minWidth: 400 }}>
       <CardContent>
@@ -57,7 +71,20 @@ const EpochConverter = () => {
             label="Epoch Timestamp"
             variant="outlined"
             value={epoch}
-            onChange={(e) => setEpoch(e.target.value)}
+            onChange={(e) => {
+              const val = e.target.value.trim();
+              setEpoch(val);
+              // Auto-detect unit based on numeric length
+              if (/^-?\d+$/.test(val)) {
+                const len = val.replace(/^-/, '').length;
+                let inferred = unit;
+                if (len <= 10) inferred = 's';
+                else if (len <= 13) inferred = 'ms';
+                else if (len <= 16) inferred = 'μs';
+                else inferred = 'ns';
+                if (inferred !== unit) setUnit(inferred);
+              }
+            }}
             type="number"
             placeholder="Enter timestamp..."
           />
@@ -103,12 +130,22 @@ const EpochConverter = () => {
         {result && (
           <Box sx={{ marginTop: 2, opacity: 1, visibility: 'visible' }}>
             <Typography variant="subtitle2" gutterBottom>Conversion Results</Typography>
-            <Typography variant="body2"><strong>UTC:</strong> {result.utc}</Typography>
-            <Typography variant="body2"><strong>Local:</strong> {result.local}</Typography>
-            <Typography variant="body2"><strong>ISO 8601:</strong> {result.iso}</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <Typography variant="body2"><strong>UTC:</strong> {result.utc}</Typography>
+              <IconButton size="small" onClick={() => handleCopy(result.utc)} aria-label="copy-utc"><ContentCopyIcon fontSize="small" /></IconButton>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <Typography variant="body2"><strong>Local:</strong> {result.local}</Typography>
+              <IconButton size="small" onClick={() => handleCopy(result.local)} aria-label="copy-local"><ContentCopyIcon fontSize="small" /></IconButton>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <Typography variant="body2"><strong>ISO 8601:</strong> {result.iso}</Typography>
+              <IconButton size="small" onClick={() => handleCopy(result.iso)} aria-label="copy-iso"><ContentCopyIcon fontSize="small" /></IconButton>
+            </Box>
           </Box>
         )}
       </CardContent>
+      <Snackbar open={snackbarOpen} autoHideDuration={2000} onClose={handleSnackbarClose} message={snackbarMsg} />
     </Card>
   );
 };
